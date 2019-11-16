@@ -26,7 +26,7 @@ datafolder = "dataset"
 modfolder = "models"
 outfolder = "."
 
-with tf.variable_scope(tf.get_variable_scope()):
+with tf.compat.v1.variable_scope(tf.get_variable_scope()):
     input = tf.compat.v1.placeholder(tf.float32, shape=[None, 1, None, 1])
     clean = tf.compat.v1.placeholder(tf.float32, shape=[None, 1, None, 1])
 
