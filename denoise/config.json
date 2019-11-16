@@ -24,7 +24,10 @@
                 "final": [2048, 256]
             }
         },
+        "num_params": 6342657,
         "num_stacks": 3,
+        "input_length": 7739,
+        "receptive_field_length": 6139,
         "target_field_length": 1601,
         "target_padding": 1
     },
@@ -53,7 +56,7 @@
         "num_epochs": 250,
         "num_test_samples": 100,
         "num_train_samples": 1000,
-        "path": "sessions/002",
+        "path": "sessions/001",
         "verbosity": 1
     }
 }
