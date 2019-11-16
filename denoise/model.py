@@ -16,17 +16,19 @@ def lossnet(input, n_layers=14, training=True, reuse=False, norm_type="SBN", ksz
         n_channels = base_channels * (2 ** (id // blk_channels))  # UPDATE CHANNEL COUNT
 
         if id == 0:
-            net = tf.nn.conv2d(input, n_channels, [1, ksz], activation=leakey_relu, normalizer_fn=norm_fn,
-                               stride=[1, 2],
-                               scope='loss_conv_%d' % id, padding='SAME', reuse=reuse)
+            net = tf.compat.v1.layers.conv2d(input, n_channels, [1, ksz], activation=leakey_relu, normalizer_fn=norm_fn,
+                                             stride=[1, 2],
+                                             scope='loss_conv_%d' % id, padding='SAME', reuse=reuse)
             layers.append(net)
         elif id < n_layers - 1:
-            net = tf.nn.conv2d(layers[-1], n_channels, [1, ksz], activation=leakey_relu, normalizer_fn=norm_fn,
-                               stride=[1, 2], scope='loss_conv_%d' % id, padding='SAME', reuse=reuse)
+            net = tf.compat.v1.layers.conv2d(layers[-1], n_channels, [1, ksz], activation=leakey_relu,
+                                             normalizer_fn=norm_fn,
+                                             stride=[1, 2], scope='loss_conv_%d' % id, padding='SAME', reuse=reuse)
             layers.append(net)
         else:
-            net = tf.nn.conv2d(layers[-1], n_channels, [1, ksz], activation=leakey_relu, normalizer_fn=norm_fn,
-                               scope='loss_conv_%d' % id, padding='SAME', reuse=reuse)
+            net = tf.compat.v1.layers.conv2d(layers[-1], n_channels, [1, ksz], activation=leakey_relu,
+                                             normalizer_fn=norm_fn,
+                                             scope='loss_conv_%d' % id, padding='SAME', reuse=reuse)
             layers.append(net)
 
     return layers
@@ -61,21 +63,21 @@ def senet(input, n_layers=13, training=True, reuse=False, norm_type="NM", ksz=3,
     for id in range(n_layers):
 
         if id == 0:
-            net = tf.nn.conv2d(input, n_channels, [1, ksz], activation=leakey_relu,
-                               normalizer_fn=nm, scope='se_conv_%d' % id,
-                               padding='SAME', reuse=reuse)
+            net = tf.compat.v1.layers.conv2d(input, n_channels, [1, ksz], activation=leakey_relu,
+                                             normalizer_fn=nm, scope='se_conv_%d' % id,
+                                             padding='SAME', reuse=reuse)
         else:
             net, pad_elements = signal_to_dilated(net, n_channels=n_channels, dilation=2 ** id)
-            net = tf.nn.conv2d(net, n_channels, [1, ksz], activation=leakey_relu,
-                               normalizer_fn=nm, scope='se_conv_%d' % id,
-                               padding='SAME', reuse=reuse)
+            net = tf.compat.v1.layers.conv2d(net, n_channels, [1, ksz], activation=leakey_relu,
+                                             normalizer_fn=nm, scope='se_conv_%d' % id,
+                                             padding='SAME', reuse=reuse)
             net = dilated_to_signal(net, n_channels=n_channels, pad_elements=pad_elements)
 
-        net = tf.nn.conv2d(net, n_channels, [1, ksz], activation=leakey_relu,
-                           normalizer_fn=nm, scope='se_conv_last',
-                           padding='SAME', reuse=reuse)
+        net = tf.compat.v1.layers.conv2d(net, n_channels, [1, ksz], activation=leakey_relu,
+                                         normalizer_fn=nm, scope='se_conv_last',
+                                         padding='SAME', reuse=reuse)
 
-        output = tf.nn.conv2d(net, 1, [1, 1], activation=None,
-                              scope='se_fc_last', padding='SAME', reuse=reuse)
+        output = tf.compat.v1.layers.conv2d(net, 1, [1, 1], activation=None,
+                                            scope='se_fc_last', padding='SAME', reuse=reuse)
 
         return output
