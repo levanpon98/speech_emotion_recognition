@@ -3,9 +3,8 @@ from tqdm import tqdm
 from scipy.io import wavfile
 import os, csv
 
-
 # DATA LOADING - LOAD FILE LISTS
-def load_full_data_list(datafolder='dataset'):  # check change path names
+def load_full_data_list(datafolder='dataset'):#check change path names
 
     sets = ['train', 'val']
     dataset = {}
@@ -14,7 +13,7 @@ def load_full_data_list(datafolder='dataset'):  # check change path names
         dataset[setname] = {}
         datafolders[setname] = datafolder + '/' + setname + 'set'
 
-    print("Loading files...")
+    print "Loading files..."
     for setname in sets:
         foldername = datafolders[setname]
 
@@ -22,30 +21,31 @@ def load_full_data_list(datafolder='dataset'):  # check change path names
         dataset[setname]['outnames'] = []
         dataset[setname]['shortnames'] = []
 
-        filelist = os.listdir("%s_noisy" % (foldername))
+        filelist = os.listdir("%s_noisy"%(foldername))
         filelist = [f for f in filelist if f.endswith(".wav")]
         for i in tqdm(filelist):
-            dataset[setname]['innames'].append("%s_noisy/%s" % (foldername, i))
-            dataset[setname]['outnames'].append("%s_clean/%s" % (foldername, i))
-            dataset[setname]['shortnames'].append("%s" % (i))
+            dataset[setname]['innames'].append("%s_noisy/%s"%(foldername,i))
+            dataset[setname]['outnames'].append("%s_clean/%s"%(foldername,i))
+            dataset[setname]['shortnames'].append("%s"%(i))
 
     return dataset['train'], dataset['val']
 
 
 # DATA LOADING - LOAD FILE DATA
 def load_full_data(trainset, valset):
+
     for dataset in [trainset, valset]:
 
-        dataset['inaudio'] = [None] * len(dataset['innames'])
-        dataset['outaudio'] = [None] * len(dataset['outnames'])
+        dataset['inaudio']  = [None]*len(dataset['innames'])
+        dataset['outaudio'] = [None]*len(dataset['outnames'])
 
         for id in tqdm(range(len(dataset['innames']))):
 
             if dataset['inaudio'][id] is None:
-                fs, inputData = wavfile.read(dataset['innames'][id])
+                fs, inputData  = wavfile.read(dataset['innames'][id])
                 fs, outputData = wavfile.read(dataset['outnames'][id])
 
-                inputData = np.reshape(inputData, [-1, 1])
+                inputData  = np.reshape(inputData, [-1, 1])
                 outputData = np.reshape(outputData, [-1, 1])
 
                 shape = np.shape(inputData)
@@ -53,58 +53,58 @@ def load_full_data(trainset, valset):
                 inputData = np.reshape(inputData, [1, 1, shape[0], shape[1]])
                 outputData = np.reshape(outputData, [1, 1, shape[0], shape[1]])
 
-                dataset['inaudio'][id] = np.float32(inputData)
+                dataset['inaudio'][id]  = np.float32(inputData)
                 dataset['outaudio'][id] = np.float32(outputData)
 
     return trainset, valset
 
-
 # DATA LOADING - LOAD FILE LISTS
-def load_noisy_data_list(valfolder=''):  # check change path names
+def load_noisy_data_list(valfolder = ''):#check change path names
 
     sets = ['val']
     dataset = {'val': {}}
     datafolders = {'val': valfolder}
 
-    print("Loading files...")
+    print "Loading files..."
     for setname in sets:
         foldername = datafolders[setname]
 
         dataset[setname]['innames'] = []
         dataset[setname]['shortnames'] = []
 
-        filelist = os.listdir("%s" % (foldername))
+        filelist = os.listdir("%s"%(foldername))
         filelist = [f for f in filelist if f.endswith(".wav")]
         for i in tqdm(filelist):
-            dataset[setname]['innames'].append("%s/%s" % (foldername, i))
-            dataset[setname]['shortnames'].append("%s" % (i))
+            dataset[setname]['innames'].append("%s/%s"%(foldername,i))
+            dataset[setname]['shortnames'].append("%s"%(i))
 
     return dataset['val']
 
 
 # DATA LOADING - LOAD FILE DATA
 def load_noisy_data(valset):
+
     for dataset in [valset]:
 
-        dataset['inaudio'] = [None] * len(dataset['innames'])
+        dataset['inaudio']  = [None]*len(dataset['innames'])
 
         for id in tqdm(range(len(dataset['innames']))):
 
             if dataset['inaudio'][id] is None:
-                fs, inputData = wavfile.read(dataset['innames'][id])
+                fs, inputData  = wavfile.read(dataset['innames'][id])
 
-                inputData = np.reshape(inputData, [-1, 1])
+                inputData  = np.reshape(inputData, [-1, 1])
                 shape = np.shape(inputData)
 
                 inputData = np.reshape(inputData, [1, 1, shape[0], shape[1]])
 
-                dataset['inaudio'][id] = np.float32(inputData)
+                dataset['inaudio'][id]  = np.float32(inputData)
 
     return valset
 
-
 # ACOUSTIC SCENE CLASSIFICATION - LOAD DATA
 def load_asc_data(ase_folder):
+
     sets = ['train', 'val']
     folders = {}
     for setname in sets:
@@ -155,6 +155,7 @@ def load_asc_data(ase_folder):
 
 # DOMESTIC AUDIO TAGGING - LOAD DATA
 def load_dat_data(dat_folder):
+
     sets = ['train', 'val']
     csv_files = {}
     csv_files[sets[0]] = dat_folder + "/development_chunks_refined.csv"
