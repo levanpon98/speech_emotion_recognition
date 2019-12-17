@@ -1,0 +1,28 @@
+TRAIN:
+  MODE: 'TRAIN'
+  CHECKPOINT_DIR: './logs/train/'
+  MAX_TO_KEEP: 1000
+  LEARNING_RATE: 0.001
+  MAX_STEP: 2000
+  IS_PRETRAIN: False
+  TRAIN_CSV: 'data/train_label.csv'
+  PRE_TRAIN_WEIGHT: './data/imagenet_models/vgg16.npy'
+
+TEST:
+  MODE: 'TEST'
+  MODEL_PATH: './logs/train/'
+
+DATA:
+  N_CLASSES: 6
+  BATCH_SIZE: 256
+  DATASET_TYPE: 'BIN'
+  BETA: 0.001
+  IMAGE_SIZE:
+    WIDTH: 20
+    HEIGHT: 20
+    DEPTH: 1
+  DATA_DIR: 'data/train/'
+  TEST_DIR: 'data/test/'
+  IS_SHUFFLE: True
+  BIN:
+    LABEL_BYTES: 1
